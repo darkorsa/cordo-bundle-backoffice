@@ -18,7 +18,7 @@ class InstallCommand extends BaseConsoleCommand
 {
     private const DEFAULT_CONTEXT = 'Backoffice';
 
-    protected static $defaultName = 'cordo/backoffice:init';
+    protected static $defaultName = 'cordo/backoffice:install';
 
     protected $output;
 

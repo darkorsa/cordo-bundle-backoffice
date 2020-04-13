@@ -9,6 +9,55 @@
 
 Backoffice bundle for [Cordo microframework](https://github.com/darkorsa/cordo)
 
+## Install
+
+Go to your [Cordo](https://github.com/darkorsa/cordo) project folder root dir and type:
+
+``` bash
+$ composer require darkorsa/cordo-bundle-backoffice
+```
+
+Next register bundle install command in `./cordo` file:
+
+``` php
+$application->add(new \Cordo\Bundle\Backoffice\InstallCommand::class);
+```
+
+and execute command:
+
+``` bash
+$ php cordo cordo/backoffice:install
+```
+
+That will install all the modules in your `./app/Backoffice` folder.
+
+If you want to change to default installation folder, provide context parameter:
+
+``` bash
+$ php cordo cordo/backoffice:install MyContext
+```
+
+That will change the installation folder to `./app/MyContext`.
+
+Now, register the new bundle in your application. Just the following modules to the `./app/Register.php`:
+
+``` php
+protected static $register = [
+    'Backoffice\Users',
+    'Backoffice\Acl',
+    'Backoffice\Auth',
+    // ...
+];
+```
+
+Lastly update your schema by typing in the root folder of your project:
+
+``` bash
+$ composer schema-update
+```
+
+Great! Backoffice bundle now is installed and ready to use.
+
 ## Security
 
 If you discover any security related issues, please email dkorsak@gmail.com instead of using the issue tracker.
