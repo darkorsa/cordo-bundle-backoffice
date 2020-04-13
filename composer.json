@@ -1,0 +1,11 @@
+{
+    "name": "darkorsa/cordo-bundle-backoffice",
+    "description": "Backoffice bundle for Cordo microframework",
+    "license": "MIT",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Cordo\\Bundle\\Backoffice\\": "src"
+        }
+    }
+}
