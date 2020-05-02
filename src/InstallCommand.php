@@ -47,7 +47,7 @@ class InstallCommand extends BaseConsoleCommand
 
         $this->copyFiles($rootPath, $targetPath);
         $this->parseFiles($targetPath);
-        // $this->updateSchema($output);
+        $this->updateSchema($output);
 
         return 0;
     }
@@ -122,6 +122,6 @@ class InstallCommand extends BaseConsoleCommand
         ];
         $tool->updateSchema($classes);
 
-        $output->writeln('Schema created successfully.');
+        $output->writeln('Schema updated successfully.');
     }
 }

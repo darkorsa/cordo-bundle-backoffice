@@ -20,7 +20,7 @@ $ composer require darkorsa/cordo-bundle-backoffice
 Next register bundle install command in `./cordo` file:
 
 ``` php
-$application->add(new \Cordo\Bundle\Backoffice\InstallCommand::class);
+$application->add(new \Cordo\Bundle\Backoffice\InstallCommand($container));
 ```
 
 and execute command:
@@ -29,7 +29,7 @@ and execute command:
 $ php cordo cordo/backoffice:install
 ```
 
-That will install all the modules in your `./app/Backoffice` folder.
+That will install all the modules in your `./app/Backoffice` folder and automatically update the DB schema. 
 
 If you want to change to default installation folder, provide context parameter:
 
@@ -48,12 +48,6 @@ protected static $register = [
     'Backoffice\Auth',
     // ...
 ];
-```
-
-Lastly update your schema by typing in the root folder of your project:
-
-``` bash
-$ composer schema-update
 ```
 
 Great! Backoffice bundle now is installed and ready to use.
