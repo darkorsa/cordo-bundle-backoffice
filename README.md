@@ -29,7 +29,7 @@ and execute command:
 $ php cordo cordo/backoffice:install
 ```
 
-That will install all the modules in your `./app/Backoffice` folder and automatically update the DB schema. 
+That will install all the modules in your `./app/Backoffice` folder, update `./app/Register.php` file and create the DB schemas. 
 
 If you want to change to default installation folder, provide context parameter:
 
@@ -38,17 +38,6 @@ $ php cordo cordo/backoffice:install MyContext
 ```
 
 That will change the installation folder to `./app/MyContext`.
-
-Now, register the new bundle in your application. Just the following modules to the `./app/Register.php`:
-
-``` php
-protected static $register = [
-    'Backoffice\Users',
-    'Backoffice\Acl',
-    'Backoffice\Auth',
-    // ...
-];
-```
 
 Great! Backoffice bundle now is installed and ready to use.
 
