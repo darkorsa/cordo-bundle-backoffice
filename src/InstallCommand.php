@@ -3,10 +3,14 @@
 namespace Cordo\Bundle\Backoffice;
 
 use SplFileInfo;
+use App\Register;
 use FilesystemIterator;
 use RecursiveIteratorIterator;
+use Nette\PhpGenerator\PhpFile;
 use RecursiveDirectoryIterator;
+use Nette\PhpGenerator\ClassType;
 use Doctrine\ORM\Tools\SchemaTool;
+use Nette\PhpGenerator\PsrPrinter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,7 +51,8 @@ class InstallCommand extends BaseConsoleCommand
 
         $this->copyFiles($rootPath, $targetPath);
         $this->parseFiles($targetPath);
-        $this->updateSchema($output);
+        $this->registerModules($rootPath);
+        $this->createSchema($output);
 
         return 0;
     }
@@ -111,17 +116,39 @@ class InstallCommand extends BaseConsoleCommand
         }
     }
 
-    private function updateSchema($output)
+    private function registerModules()
     {
-        $em = $this->container->get('entity_manager');
+        Register::add('Backoffice\Users');
+        Register::add('Backoffice\Acl');
+        Register::add('Backoffice\Auth');
+
+        // add modules to app/Register file
+        $class = ClassType::from(Register::class);
+        $property = $class->getProperty('register');
+
+        array_push($property->getValue(), 'Backoffice\Users');
+        array_push($property->getValue(), 'Backoffice\Acl');
+        array_push($property->getValue(), 'Backoffice\Auth');
+
+        $file = (new PhpFile())->setStrictTypes();
+        $namespace = $file->addNamespace('App');
+        $namespace->add($class);
+        $namespace->addUse('Cordo\Core\Application\Service\Register\ModulesRegister');
+
+        file_put_contents(app_path() . 'Register.php', (new PsrPrinter)->printFile($file));
+    }
+
+    private function createSchema($output)
+    {
+        $em = require(root_path() . 'bootstrap/db.php');
         $tool = new SchemaTool($em);
 
         $classes = [
             $em->getClassMetadata("App\\{$this->context}\\Users\Domain\User"),
             $em->getClassMetadata("App\\{$this->context}\\Acl\Domain\Acl")
         ];
-        $tool->updateSchema($classes);
+        $tool->createSchema($classes);
 
-        $output->writeln('Schema updated successfully.');
+        $output->writeln('Schema created successfully.');
     }
 }
