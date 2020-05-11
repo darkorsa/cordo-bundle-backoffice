@@ -18,7 +18,7 @@ use App\Backoffice\Users\UI\Validator\EmailExistsValidation;
 
 class CreateNewUserConsoleCommand extends BaseConsoleCommand
 {
-    protected static $defaultName = 'users:create-user';
+    protected static $defaultName = 'cordo/backoffice:create-user';
 
     protected function configure()
     {
