@@ -20,19 +20,21 @@ class AclMiddleware implements MiddlewareInterface
 
     private $service;
 
+    private $resource;
+
     private $privilage;
 
-    public function __construct(ContainerInterface $container, ?string $privilage = null)
+    public function __construct(ContainerInterface $container, string $resource, ?string $privilage = null)
     {
-        $this->container    = $container;
-        $this->acl          = $container->get('acl');
-        $this->service      = $container->get('backoffice.acl.query.service');
-        $this->privilage    = $privilage;
+        $this->container = $container;
+        $this->acl = $container->get('acl');
+        $this->service = $container->get('backoffice.acl.query.service');
+        $this->resource = $resource;
+        $this->privilage = $privilage;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $resource = $this->getResourceFromUriPath($request->getUri()->getPath());
         $priviledge = $this->privilage ?: strtolower($request->getMethod());
 
         $role = $this->getSystemRole($request);
@@ -40,28 +42,17 @@ class AclMiddleware implements MiddlewareInterface
             $this->service->setUserAclPrivileges($role, $request->getAttribute('user_id'), $this->acl);
         }
 
-        if (!$this->acl->isAllowed($role, $resource, $priviledge)) {
+        if (!$this->acl->isAllowed($role, $this->resource, $priviledge)) {
             return new Response(self::HTTP_UNAUTHORIZED);
         }
 
         return $handler->handle($request);
     }
 
-    private function getResourceFromUriPath(string $path): string
-    {
-        $resource = trim($path, '/');
-
-        if (strpos($resource, '/') !== false) {
-            $resource = strstr($resource, '/', true);
-        }
-
-        return (string) $resource;
-    }
-
     private function getSystemRole(ServerRequestInterface $request): SystemRole
     {
         return $request->getAttribute('user_id')
-            ? new SystemRole(SystemRole::LOGGED())
-            : new SystemRole(SystemRole::GUEST());
+            ? SystemRole::LOGGED()
+            : SystemRole::GUEST();
     }
 }
