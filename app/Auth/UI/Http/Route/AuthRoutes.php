@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Backoffice\Auth\UI\Http\Route;
 
 use OAuth2\Request;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use Cordo\Core\Application\Service\Register\RoutesRegister;
 
 class AuthRoutes extends RoutesRegister
@@ -41,7 +43,7 @@ class AuthRoutes extends RoutesRegister
         $this->router->addRoute(
             'POST',
             '/backoffice-auth/token',
-            function () {
+            function (): ResponseInterface {
                 $request = Request::createFromGlobals();
 
                 $response = $this->container->get('backoffice_oauth_server')->handleTokenRequest($request);
@@ -50,8 +52,7 @@ class AuthRoutes extends RoutesRegister
                     $response->setParameter('login', $request->request('username'));
                 }
 
-                $response->send();
-                die;
+                return new Response(200, [], json_encode($response->getParameters()));
             }
         );
     }
@@ -82,12 +83,12 @@ class AuthRoutes extends RoutesRegister
         $this->router->addRoute(
             'POST',
             '/backoffice-auth/token-refresh',
-            function () {
+            function (): ResponseInterface {
                 $response = $this->container
                     ->get('backoffice_oauth_server')
                     ->handleTokenRequest(Request::createFromGlobals());
-                $response->send();
-                die;
+
+                return new Response(200, [], json_encode($response->getParameters()));
             }
         );
     }
