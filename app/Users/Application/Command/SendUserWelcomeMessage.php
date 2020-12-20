@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Backoffice\Users\Application\Command;
 
-use Cordo\Core\Application\Queue\AbstractMessage;
+use Cordo\Core\Application\Queue\QueueMessage;
 
-class SendUserWelcomeMessage extends AbstractMessage
+class SendUserWelcomeMessage extends QueueMessage
 {
     public string $email;
 
