@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Backoffice\Users\UI\Http\Route;
 
+use Cordo\Core\UI\Http\Middleware\OAuth2Middleware;
 use App\Backoffice\Shared\UI\Http\Middleware\AclMiddleware;
 use Cordo\Core\Application\Service\Register\RoutesRegister;
-use App\Backoffice\Shared\UI\Http\Middleware\AuthMiddleware;
 
 class UsersRoutes extends RoutesRegister
 {
@@ -175,7 +175,7 @@ class UsersRoutes extends RoutesRegister
             "/backoffice/users",
             'App\Backoffice\Users\UI\Http\Controller\UserCommandsController@update',
             [
-                new AuthMiddleware($this->container),
+                new OAuth2Middleware($this->container, 'backoffice\users'),
                 new AclMiddleware($this->container, 'backoffice\users')
             ]
         );
@@ -205,7 +205,7 @@ class UsersRoutes extends RoutesRegister
             "/backoffice/users",
             'App\Backoffice\Users\UI\Http\Controller\UserCommandsController@delete',
             [
-                new AuthMiddleware($this->container),
+                new OAuth2Middleware($this->container, 'backoffice\users'),
                 new AclMiddleware($this->container, 'backoffice\users')
             ]
         );

@@ -46,13 +46,13 @@ class AuthRoutes extends RoutesRegister
             function (): ResponseInterface {
                 $request = Request::createFromGlobals();
 
-                $response = $this->container->get('backoffice_oauth_server')->handleTokenRequest($request);
+                $response = $this->container->get('backoffice\users_oauth_server')->handleTokenRequest($request);
 
                 if ($response->getStatusText() === 'OK') {
                     $response->setParameter('login', $request->request('username'));
                 }
 
-                return new Response(200, [], json_encode($response->getParameters()));
+                return new Response($response->getStatusCode(), [], json_encode($response->getParameters()));
             }
         );
     }
@@ -85,10 +85,10 @@ class AuthRoutes extends RoutesRegister
             '/backoffice-auth/token-refresh',
             function (): ResponseInterface {
                 $response = $this->container
-                    ->get('backoffice_oauth_server')
+                    ->get('backoffice\users_oauth_server')
                     ->handleTokenRequest(Request::createFromGlobals());
 
-                return new Response(200, [], json_encode($response->getParameters()));
+                return new Response($response->getStatusCode(), [], json_encode($response->getParameters()));
             }
         );
     }
