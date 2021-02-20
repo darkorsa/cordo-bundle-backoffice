@@ -38,6 +38,18 @@ class User extends AggregateRoot
         $this->updatedAt = $updatedAt;
     }
 
+    public function update(
+        UserEmail $email,
+        UserPasswordHash $password,
+        UserActive $isActive,
+        DateTime $updatedAt
+    ): void {
+        $this->email = $email->value();
+        $this->password = $password->value();
+        $this->isActive = $isActive->value();
+        $this->updatedAt = $updatedAt;
+    }
+
     public function created()
     {
         /**

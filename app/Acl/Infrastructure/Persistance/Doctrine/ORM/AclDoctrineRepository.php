@@ -40,7 +40,7 @@ class AclDoctrineRepository implements AclRepository
 
     public function update(Acl $acl): void
     {
-        $this->entityManager->merge($acl);
+        $this->entityManager->persist($acl);
         $this->entityManager->flush();
     }
 

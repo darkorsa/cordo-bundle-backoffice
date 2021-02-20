@@ -41,4 +41,10 @@ class Acl
         $this->createdAt    = $createdAt;
         $this->updatedAt    = $updatedAt;
     }
+
+    public function update(array $privileges, DateTime $updatedAt): void
+    {
+        $this->privileges   = json_encode($privileges);
+        $this->updatedAt    = $updatedAt;
+    }
 }

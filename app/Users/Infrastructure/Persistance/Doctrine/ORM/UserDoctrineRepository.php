@@ -40,7 +40,7 @@ class UserDoctrineRepository implements UserRepository
 
     public function update(User $user): void
     {
-        $this->entityManager->merge($user);
+        $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 
